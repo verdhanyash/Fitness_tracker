@@ -146,9 +146,21 @@ def update_user_display(user_data):
 )
 def update_charts(n_clicks, n_intervals, token, start_date, end_date, workout_type):
     """Update all charts with current data."""
+    # Minimalist chart layout
+    chart_layout = dict(
+        paper_bgcolor='#ffffff',
+        plot_bgcolor='#ffffff',
+        font=dict(family='Geist Mono, monospace', color='#000000', size=12),
+        margin=dict(l=40, r=40, t=50, b=40),
+        title_font=dict(size=14, color='#000000'),
+        legend=dict(font=dict(size=11))
+    )
+    
     empty_fig = go.Figure()
     empty_fig.update_layout(
-        annotations=[{"text": "No data available", "showarrow": False, "font": {"size": 16}}]
+        paper_bgcolor='#ffffff',
+        plot_bgcolor='#ffffff',
+        annotations=[{"text": "No data available", "showarrow": False, "font": {"size": 14, "color": "#888888"}}]
     )
     
     if not token:
@@ -160,33 +172,42 @@ def update_charts(n_clicks, n_intervals, token, start_date, end_date, workout_ty
     fitness_records = client.get_fitness_records(start_date, end_date, workout_type if workout_type else None)
     health_metrics = client.get_health_metrics(start_date, end_date)
     
+    # Color palette - vibrant but clean
+    colors = ['#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FFEAA7', '#DDA0DD', '#98D8C8']
+    
     # Workout distribution pie chart
     if fitness_records:
         df_fitness = pd.DataFrame(fitness_records)
         workout_counts = df_fitness['workout_type'].value_counts()
-        pie_fig = px.pie(
+        pie_fig = go.Figure(data=[go.Pie(
+            labels=workout_counts.index,
             values=workout_counts.values,
-            names=workout_counts.index,
-            title="Workout Types",
-            color_discrete_sequence=px.colors.qualitative.Set3
-        )
+            hole=0.4,
+            marker=dict(colors=colors),
+            textinfo='percent+label',
+            textfont=dict(size=11)
+        )])
+        pie_fig.update_layout(**chart_layout, title='Workout Distribution', showlegend=True)
     else:
         pie_fig = empty_fig
-
     
     # Calories line chart
     if fitness_records:
         df_fitness = pd.DataFrame(fitness_records)
         df_fitness['date'] = pd.to_datetime(df_fitness['date'])
         calories_by_date = df_fitness.groupby('date')['calories_burned'].sum().reset_index()
-        calories_fig = px.line(
-            calories_by_date,
-            x='date',
-            y='calories_burned',
-            title="Calories Burned",
-            markers=True
-        )
-        calories_fig.update_traces(line_color='#FF6B6B')
+        calories_fig = go.Figure(data=[go.Scatter(
+            x=calories_by_date['date'],
+            y=calories_by_date['calories_burned'],
+            mode='lines+markers',
+            line=dict(color='#FF6B6B', width=2),
+            marker=dict(size=8, color='#FF6B6B'),
+            fill='tozeroy',
+            fillcolor='rgba(255, 107, 107, 0.1)'
+        )])
+        calories_fig.update_layout(**chart_layout, title='Calories Burned', showlegend=False)
+        calories_fig.update_xaxes(showgrid=False, showline=True, linecolor='#e5e5e5')
+        calories_fig.update_yaxes(showgrid=True, gridcolor='#f5f5f5', showline=True, linecolor='#e5e5e5')
     else:
         calories_fig = empty_fig
     
@@ -195,15 +216,20 @@ def update_charts(n_clicks, n_intervals, token, start_date, end_date, workout_ty
         df_health = pd.DataFrame(health_metrics)
         df_health['date'] = pd.to_datetime(df_health['date'])
         df_health = df_health.sort_values('date')
-        steps_fig = px.bar(
-            df_health,
-            x='date',
-            y='steps',
-            title="Daily Steps",
-            color='steps',
-            color_continuous_scale='Greens'
-        )
-        steps_fig.add_hline(y=10000, line_dash="dash", line_color="red", annotation_text="Goal: 10,000")
+        steps_fig = go.Figure(data=[go.Bar(
+            x=df_health['date'],
+            y=df_health['steps'],
+            marker=dict(
+                color=df_health['steps'],
+                colorscale=[[0, '#96CEB4'], [0.5, '#4ECDC4'], [1, '#45B7D1']],
+                line=dict(width=0)
+            )
+        )])
+        steps_fig.add_hline(y=10000, line_dash="dash", line_color="#FF6B6B", 
+                          annotation_text="Goal: 10K", annotation_font_color="#FF6B6B")
+        steps_fig.update_layout(**chart_layout, title='Daily Steps', showlegend=False)
+        steps_fig.update_xaxes(showgrid=False, showline=True, linecolor='#e5e5e5')
+        steps_fig.update_yaxes(showgrid=True, gridcolor='#f5f5f5', showline=True, linecolor='#e5e5e5')
     else:
         steps_fig = empty_fig
     
@@ -212,14 +238,16 @@ def update_charts(n_clicks, n_intervals, token, start_date, end_date, workout_ty
         df_health = pd.DataFrame(health_metrics)
         df_health['date'] = pd.to_datetime(df_health['date'])
         df_health = df_health.sort_values('date')
-        weight_fig = px.line(
-            df_health,
-            x='date',
-            y='weight_kg',
-            title="Weight Trend",
-            markers=True
-        )
-        weight_fig.update_traces(line_color='#4ECDC4')
+        weight_fig = go.Figure(data=[go.Scatter(
+            x=df_health['date'],
+            y=df_health['weight_kg'],
+            mode='lines+markers',
+            line=dict(color='#4ECDC4', width=2),
+            marker=dict(size=8, color='#4ECDC4')
+        )])
+        weight_fig.update_layout(**chart_layout, title='Weight Trend', showlegend=False)
+        weight_fig.update_xaxes(showgrid=False, showline=True, linecolor='#e5e5e5')
+        weight_fig.update_yaxes(showgrid=True, gridcolor='#f5f5f5', showline=True, linecolor='#e5e5e5')
     else:
         weight_fig = empty_fig
     
@@ -233,18 +261,22 @@ def update_charts(n_clicks, n_intervals, token, start_date, end_date, workout_ty
         sleep_water_fig.add_trace(go.Scatter(
             x=df_health['date'],
             y=df_health['sleep_hours'],
-            name='Sleep (hours)',
+            name='Sleep (hrs)',
             fill='tozeroy',
-            line=dict(color='#9B59B6')
+            line=dict(color='#9B59B6', width=2),
+            fillcolor='rgba(155, 89, 182, 0.2)'
         ))
         sleep_water_fig.add_trace(go.Scatter(
             x=df_health['date'],
             y=df_health['water_intake_liters'],
-            name='Water (liters)',
+            name='Water (L)',
             fill='tozeroy',
-            line=dict(color='#3498DB')
+            line=dict(color='#45B7D1', width=2),
+            fillcolor='rgba(69, 183, 209, 0.2)'
         ))
-        sleep_water_fig.update_layout(title="Sleep & Water Intake")
+        sleep_water_fig.update_layout(**chart_layout, title='Sleep & Hydration', showlegend=True)
+        sleep_water_fig.update_xaxes(showgrid=False, showline=True, linecolor='#e5e5e5')
+        sleep_water_fig.update_yaxes(showgrid=True, gridcolor='#f5f5f5', showline=True, linecolor='#e5e5e5')
     else:
         sleep_water_fig = empty_fig
     

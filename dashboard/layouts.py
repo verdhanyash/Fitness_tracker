@@ -1,264 +1,340 @@
-"""Dashboard page layouts."""
+"""Dashboard page layouts - Minimalistic Design."""
 from dash import html, dcc
 import dash_bootstrap_components as dbc
 
 
 def login_layout():
     """Login page layout."""
-    return dbc.Container([
-        dbc.Row([
-            dbc.Col([
-                html.H2("Fitness & Health Tracker", className="text-center mb-4 mt-5"),
-                html.P("Track your workouts and health metrics", className="text-center text-muted mb-4"),
-                
-                dbc.Card([
-                    dbc.CardBody([
-                        html.H4("Login", className="card-title mb-4"),
-                        dbc.Input(id="login-username", placeholder="Username", className="mb-3"),
-                        dbc.Input(id="login-password", type="password", placeholder="Password", className="mb-3"),
-                        dbc.Button("Login", id="login-button", color="primary", className="w-100 mb-3"),
-                        html.Div(id="login-error", className="text-danger"),
-                        html.Hr(),
-                        html.P("Don't have an account?", className="text-center mb-2"),
-                        dbc.Button("Register", id="show-register", color="secondary", outline=True, className="w-100")
-                    ])
-                ], className="shadow")
-            ], width={"size": 4, "offset": 4})
-        ])
-    ], fluid=True)
+    return html.Div([
+        html.Div([
+            html.H1("fitness tracker", style={
+                'fontSize': '2rem',
+                'fontWeight': '600',
+                'letterSpacing': '-1px',
+                'marginBottom': '0.5rem'
+            }),
+            html.P("track your workouts and health metrics", style={
+                'color': '#888888',
+                'fontSize': '0.875rem',
+                'marginBottom': '3rem'
+            }),
+            
+            dbc.Card([
+                dbc.CardBody([
+                    html.H4("login", style={
+                        'fontWeight': '600',
+                        'marginBottom': '1.5rem',
+                        'fontSize': '1.125rem'
+                    }),
+                    dbc.Input(id="login-username", placeholder="username", 
+                             style={'marginBottom': '1rem'}),
+                    dbc.Input(id="login-password", type="password", placeholder="password",
+                             style={'marginBottom': '1.5rem'}),
+                    dbc.Button("login", id="login-button", color="primary", 
+                              style={'width': '100%', 'marginBottom': '1rem'}),
+                    html.Div(id="login-error", style={'color': '#ef4444', 'fontSize': '0.875rem'}),
+                    html.Hr(style={'margin': '1.5rem 0'}),
+                    html.P("don't have an account?", style={
+                        'textAlign': 'center',
+                        'color': '#888888',
+                        'fontSize': '0.875rem',
+                        'marginBottom': '0.75rem'
+                    }),
+                    dbc.Button("register", id="show-register", outline=True,
+                              style={'width': '100%'})
+                ])
+            ], style={'maxWidth': '360px', 'margin': '0 auto', 'border': '1px solid #e5e5e5'})
+        ], style={
+            'textAlign': 'center',
+            'paddingTop': '10vh',
+            'minHeight': '100vh',
+            'backgroundColor': '#ffffff'
+        })
+    ])
 
 
 def register_layout():
     """Registration page layout."""
-    return dbc.Container([
-        dbc.Row([
-            dbc.Col([
-                html.H2("Create Account", className="text-center mb-4 mt-5"),
-                
-                dbc.Card([
-                    dbc.CardBody([
-                        html.H4("Register", className="card-title mb-4"),
-                        dbc.Input(id="register-username", placeholder="Username", className="mb-3"),
-                        dbc.Input(id="register-email", type="email", placeholder="Email", className="mb-3"),
-                        dbc.Input(id="register-password", type="password", placeholder="Password", className="mb-3"),
-                        dbc.Button("Register", id="register-button", color="primary", className="w-100 mb-3"),
-                        html.Div(id="register-error", className="text-danger"),
-                        html.Div(id="register-success", className="text-success"),
-                        html.Hr(),
-                        dbc.Button("Back to Login", id="show-login", color="secondary", outline=True, className="w-100")
-                    ])
-                ], className="shadow")
-            ], width={"size": 4, "offset": 4})
-        ])
-    ], fluid=True)
+    return html.Div([
+        html.Div([
+            html.H1("create account", style={
+                'fontSize': '2rem',
+                'fontWeight': '600',
+                'letterSpacing': '-1px',
+                'marginBottom': '3rem'
+            }),
+            
+            dbc.Card([
+                dbc.CardBody([
+                    html.H4("register", style={
+                        'fontWeight': '600',
+                        'marginBottom': '1.5rem',
+                        'fontSize': '1.125rem'
+                    }),
+                    dbc.Input(id="register-username", placeholder="username",
+                             style={'marginBottom': '1rem'}),
+                    dbc.Input(id="register-email", type="email", placeholder="email",
+                             style={'marginBottom': '1rem'}),
+                    dbc.Input(id="register-password", type="password", placeholder="password",
+                             style={'marginBottom': '1.5rem'}),
+                    dbc.Button("register", id="register-button", color="primary",
+                              style={'width': '100%', 'marginBottom': '1rem'}),
+                    html.Div(id="register-error", style={'color': '#ef4444', 'fontSize': '0.875rem'}),
+                    html.Div(id="register-success", style={'color': '#10b981', 'fontSize': '0.875rem'}),
+                    html.Hr(style={'margin': '1.5rem 0'}),
+                    dbc.Button("back to login", id="show-login", outline=True,
+                              style={'width': '100%'})
+                ])
+            ], style={'maxWidth': '360px', 'margin': '0 auto', 'border': '1px solid #e5e5e5'})
+        ], style={
+            'textAlign': 'center',
+            'paddingTop': '10vh',
+            'minHeight': '100vh',
+            'backgroundColor': '#ffffff'
+        })
+    ])
 
 
 def dashboard_layout():
     """Main dashboard layout with charts and CRUD forms."""
-    return dbc.Container([
-        # Header
-        dbc.Navbar([
-            dbc.Container([
-                dbc.NavbarBrand("Fitness & Health Tracker", className="ms-2"),
-                dbc.Nav([
-                    html.Span(id="user-display", className="navbar-text me-3"),
-                    dbc.Button("Logout", id="logout-button", color="light", size="sm")
-                ], className="ms-auto")
-            ])
-        ], color="primary", dark=True, className="mb-4"),
+    return html.Div([
+        # Black Header
+        html.Div([
+            html.Div([
+                html.Span("fitness tracker", style={
+                    'fontWeight': '600',
+                    'fontSize': '1.125rem',
+                    'letterSpacing': '-0.5px'
+                }),
+                html.Div([
+                    html.Span(id="user-display", style={
+                        'color': '#888888',
+                        'marginRight': '1.5rem',
+                        'fontSize': '0.875rem'
+                    }),
+                    dbc.Button("logout", id="logout-button", size="sm", outline=True,
+                              style={
+                                  'color': '#ffffff',
+                                  'borderColor': '#333333',
+                                  'fontSize': '0.75rem'
+                              })
+                ], style={'display': 'flex', 'alignItems': 'center'})
+            ], style={
+                'display': 'flex',
+                'justifyContent': 'space-between',
+                'alignItems': 'center',
+                'maxWidth': '1400px',
+                'margin': '0 auto',
+                'padding': '0 2rem'
+            })
+        ], style={
+            'backgroundColor': '#000000',
+            'color': '#ffffff',
+            'padding': '1rem 0'
+        }),
         
-        # Date filter
-        dbc.Row([
-            dbc.Col([
+        # Main Content
+        html.Div([
+            # Filters Row
+            html.Div([
                 dbc.Card([
                     dbc.CardBody([
                         dbc.Row([
                             dbc.Col([
-                                html.Label("Date Range Filter"),
+                                html.Label("date range"),
                                 dcc.DatePickerRange(
                                     id="date-filter",
-                                    display_format="YYYY-MM-DD",
-                                    className="w-100"
+                                    display_format="YYYY-MM-DD"
                                 )
-                            ], width=6),
+                            ], width=5),
                             dbc.Col([
-                                html.Label("Workout Type"),
+                                html.Label("workout type"),
                                 dcc.Dropdown(
                                     id="workout-type-filter",
                                     options=[
-                                        {"label": "All", "value": ""},
-                                        {"label": "Running", "value": "running"},
-                                        {"label": "Cycling", "value": "cycling"},
-                                        {"label": "Swimming", "value": "swimming"},
-                                        {"label": "Weightlifting", "value": "weightlifting"},
-                                        {"label": "Yoga", "value": "yoga"},
-                                        {"label": "HIIT", "value": "hiit"},
-                                        {"label": "Walking", "value": "walking"}
+                                        {"label": "all", "value": ""},
+                                        {"label": "running", "value": "running"},
+                                        {"label": "cycling", "value": "cycling"},
+                                        {"label": "swimming", "value": "swimming"},
+                                        {"label": "weightlifting", "value": "weightlifting"},
+                                        {"label": "yoga", "value": "yoga"},
+                                        {"label": "hiit", "value": "hiit"},
+                                        {"label": "walking", "value": "walking"}
                                     ],
                                     value="",
-                                    clearable=False
+                                    clearable=False,
+                                    style={'fontSize': '0.875rem'}
                                 )
                             ], width=4),
                             dbc.Col([
-                                html.Label(" "),
-                                dbc.Button("Refresh", id="refresh-button", color="primary", className="w-100 mt-1")
-                            ], width=2)
+                                html.Label(" ", style={'display': 'block'}),
+                                dbc.Button("refresh", id="refresh-button", color="primary",
+                                          style={'width': '100%', 'marginTop': '0.25rem'})
+                            ], width=3)
+                        ])
+                    ], style={'padding': '1rem'})
+                ], style={'marginBottom': '1.5rem'})
+            ]),
+            
+            # Charts Row 1
+            dbc.Row([
+                dbc.Col([
+                    dbc.Card([
+                        dbc.CardHeader("workout distribution"),
+                        dbc.CardBody([dcc.Graph(id="workout-pie-chart", config={'displayModeBar': False})])
+                    ])
+                ], width=6),
+                dbc.Col([
+                    dbc.Card([
+                        dbc.CardHeader("calories burned"),
+                        dbc.CardBody([dcc.Graph(id="calories-line-chart", config={'displayModeBar': False})])
+                    ])
+                ], width=6)
+            ], style={'marginBottom': '1.5rem'}),
+            
+            # Charts Row 2
+            dbc.Row([
+                dbc.Col([
+                    dbc.Card([
+                        dbc.CardHeader("daily steps"),
+                        dbc.CardBody([dcc.Graph(id="steps-bar-chart", config={'displayModeBar': False})])
+                    ])
+                ], width=6),
+                dbc.Col([
+                    dbc.Card([
+                        dbc.CardHeader("weight trend"),
+                        dbc.CardBody([dcc.Graph(id="weight-line-chart", config={'displayModeBar': False})])
+                    ])
+                ], width=6)
+            ], style={'marginBottom': '1.5rem'}),
+            
+            # Charts Row 3
+            dbc.Row([
+                dbc.Col([
+                    dbc.Card([
+                        dbc.CardHeader("sleep & hydration"),
+                        dbc.CardBody([dcc.Graph(id="sleep-water-chart", config={'displayModeBar': False})])
+                    ])
+                ], width=12)
+            ], style={'marginBottom': '1.5rem'}),
+
+            # CRUD Forms Row
+            dbc.Row([
+                # Fitness Record Form
+                dbc.Col([
+                    dbc.Card([
+                        dbc.CardHeader("add fitness record"),
+                        dbc.CardBody([
+                            dbc.Row([
+                                dbc.Col([
+                                    html.Label("date"),
+                                    dcc.DatePickerSingle(id="fitness-date", date=None)
+                                ], width=6),
+                                dbc.Col([
+                                    html.Label("workout type"),
+                                    dcc.Dropdown(
+                                        id="fitness-workout-type",
+                                        options=[
+                                            {"label": "running", "value": "running"},
+                                            {"label": "cycling", "value": "cycling"},
+                                            {"label": "swimming", "value": "swimming"},
+                                            {"label": "weightlifting", "value": "weightlifting"},
+                                            {"label": "yoga", "value": "yoga"},
+                                            {"label": "hiit", "value": "hiit"},
+                                            {"label": "walking", "value": "walking"}
+                                        ],
+                                        style={'fontSize': '0.875rem'}
+                                    )
+                                ], width=6)
+                            ], style={'marginBottom': '1rem'}),
+                            dbc.Row([
+                                dbc.Col([
+                                    html.Label("duration (min)"),
+                                    dbc.Input(id="fitness-duration", type="number", min=1)
+                                ], width=4),
+                                dbc.Col([
+                                    html.Label("calories"),
+                                    dbc.Input(id="fitness-calories", type="number", min=0)
+                                ], width=4),
+                                dbc.Col([
+                                    html.Label("distance (km)"),
+                                    dbc.Input(id="fitness-distance", type="number", min=0, step=0.1)
+                                ], width=4)
+                            ], style={'marginBottom': '1rem'}),
+                            dbc.Input(id="fitness-notes", placeholder="notes (optional)",
+                                     style={'marginBottom': '1rem'}),
+                            dbc.Button("add record", id="add-fitness-button", color="primary",
+                                      style={'width': '100%'}),
+                            html.Div(id="fitness-form-message", style={'marginTop': '0.75rem', 'fontSize': '0.875rem'})
                         ])
                     ])
-                ], className="mb-4")
-            ])
-        ]),
-        
-        # Charts Row 1
-        dbc.Row([
-            dbc.Col([
-                dbc.Card([
-                    dbc.CardHeader("Workout Distribution"),
-                    dbc.CardBody([dcc.Graph(id="workout-pie-chart")])
-                ])
-            ], width=6),
-            dbc.Col([
-                dbc.Card([
-                    dbc.CardHeader("Calories Burned Over Time"),
-                    dbc.CardBody([dcc.Graph(id="calories-line-chart")])
-                ])
-            ], width=6)
-        ], className="mb-4"),
-        
-        # Charts Row 2
-        dbc.Row([
-            dbc.Col([
-                dbc.Card([
-                    dbc.CardHeader("Daily Steps"),
-                    dbc.CardBody([dcc.Graph(id="steps-bar-chart")])
-                ])
-            ], width=6),
-            dbc.Col([
-                dbc.Card([
-                    dbc.CardHeader("Weight Trend"),
-                    dbc.CardBody([dcc.Graph(id="weight-line-chart")])
-                ])
-            ], width=6)
-        ], className="mb-4"),
-        
-        # Charts Row 3
-        dbc.Row([
-            dbc.Col([
-                dbc.Card([
-                    dbc.CardHeader("Sleep & Water Intake"),
-                    dbc.CardBody([dcc.Graph(id="sleep-water-chart")])
-                ])
-            ], width=12)
-        ], className="mb-4"),
-
-        # CRUD Forms Row
-        dbc.Row([
-            # Fitness Record Form
-            dbc.Col([
-                dbc.Card([
-                    dbc.CardHeader("Add Fitness Record"),
-                    dbc.CardBody([
-                        dbc.Row([
-                            dbc.Col([
-                                html.Label("Date"),
-                                dcc.DatePickerSingle(id="fitness-date", date=None)
-                            ], width=6),
-                            dbc.Col([
-                                html.Label("Workout Type"),
-                                dcc.Dropdown(
-                                    id="fitness-workout-type",
-                                    options=[
-                                        {"label": "Running", "value": "running"},
-                                        {"label": "Cycling", "value": "cycling"},
-                                        {"label": "Swimming", "value": "swimming"},
-                                        {"label": "Weightlifting", "value": "weightlifting"},
-                                        {"label": "Yoga", "value": "yoga"},
-                                        {"label": "HIIT", "value": "hiit"},
-                                        {"label": "Walking", "value": "walking"}
-                                    ]
-                                )
-                            ], width=6)
-                        ], className="mb-3"),
-                        dbc.Row([
-                            dbc.Col([
-                                html.Label("Duration (min)"),
-                                dbc.Input(id="fitness-duration", type="number", min=1)
-                            ], width=4),
-                            dbc.Col([
-                                html.Label("Calories"),
-                                dbc.Input(id="fitness-calories", type="number", min=0)
-                            ], width=4),
-                            dbc.Col([
-                                html.Label("Distance (km)"),
-                                dbc.Input(id="fitness-distance", type="number", min=0, step=0.1)
-                            ], width=4)
-                        ], className="mb-3"),
-                        dbc.Input(id="fitness-notes", placeholder="Notes (optional)", className="mb-3"),
-                        dbc.Button("Add Record", id="add-fitness-button", color="success", className="w-100"),
-                        html.Div(id="fitness-form-message", className="mt-2")
+                ], width=6),
+                
+                # Health Metric Form
+                dbc.Col([
+                    dbc.Card([
+                        dbc.CardHeader("add health metric"),
+                        dbc.CardBody([
+                            dbc.Row([
+                                dbc.Col([
+                                    html.Label("date"),
+                                    dcc.DatePickerSingle(id="health-date", date=None)
+                                ], width=6),
+                                dbc.Col([
+                                    html.Label("weight (kg)"),
+                                    dbc.Input(id="health-weight", type="number", min=0, step=0.1)
+                                ], width=6)
+                            ], style={'marginBottom': '1rem'}),
+                            dbc.Row([
+                                dbc.Col([
+                                    html.Label("steps"),
+                                    dbc.Input(id="health-steps", type="number", min=0)
+                                ], width=4),
+                                dbc.Col([
+                                    html.Label("water (L)"),
+                                    dbc.Input(id="health-water", type="number", min=0, step=0.1)
+                                ], width=4),
+                                dbc.Col([
+                                    html.Label("sleep (hrs)"),
+                                    dbc.Input(id="health-sleep", type="number", min=0, step=0.5)
+                                ], width=4)
+                            ], style={'marginBottom': '1rem'}),
+                            dbc.Row([
+                                dbc.Col([
+                                    html.Label("heart rate (bpm)"),
+                                    dbc.Input(id="health-heartrate", type="number", min=30, max=220)
+                                ], width=6)
+                            ], style={'marginBottom': '1rem'}),
+                            dbc.Button("add metric", id="add-health-button", color="primary",
+                                      style={'width': '100%'}),
+                            html.Div(id="health-form-message", style={'marginTop': '0.75rem', 'fontSize': '0.875rem'})
+                        ])
                     ])
-                ])
-            ], width=6),
+                ], width=6)
+            ], style={'marginBottom': '1.5rem'}),
             
-            # Health Metric Form
-            dbc.Col([
-                dbc.Card([
-                    dbc.CardHeader("Add Health Metric"),
-                    dbc.CardBody([
-                        dbc.Row([
-                            dbc.Col([
-                                html.Label("Date"),
-                                dcc.DatePickerSingle(id="health-date", date=None)
-                            ], width=6),
-                            dbc.Col([
-                                html.Label("Weight (kg)"),
-                                dbc.Input(id="health-weight", type="number", min=0, step=0.1)
-                            ], width=6)
-                        ], className="mb-3"),
-                        dbc.Row([
-                            dbc.Col([
-                                html.Label("Steps"),
-                                dbc.Input(id="health-steps", type="number", min=0)
-                            ], width=4),
-                            dbc.Col([
-                                html.Label("Water (L)"),
-                                dbc.Input(id="health-water", type="number", min=0, step=0.1)
-                            ], width=4),
-                            dbc.Col([
-                                html.Label("Sleep (hrs)"),
-                                dbc.Input(id="health-sleep", type="number", min=0, step=0.5)
-                            ], width=4)
-                        ], className="mb-3"),
-                        dbc.Row([
-                            dbc.Col([
-                                html.Label("Heart Rate (bpm)"),
-                                dbc.Input(id="health-heartrate", type="number", min=30, max=220)
-                            ], width=6)
-                        ], className="mb-3"),
-                        dbc.Button("Add Metric", id="add-health-button", color="success", className="w-100"),
-                        html.Div(id="health-form-message", className="mt-2")
+            # Data Tables Row
+            dbc.Row([
+                dbc.Col([
+                    dbc.Card([
+                        dbc.CardHeader("recent fitness records"),
+                        dbc.CardBody([
+                            html.Div(id="fitness-records-table")
+                        ])
                     ])
-                ])
-            ], width=6)
-        ], className="mb-4"),
-
-        # Data Tables Row
-        dbc.Row([
-            dbc.Col([
-                dbc.Card([
-                    dbc.CardHeader("Recent Fitness Records"),
-                    dbc.CardBody([
-                        html.Div(id="fitness-records-table")
+                ], width=6),
+                dbc.Col([
+                    dbc.Card([
+                        dbc.CardHeader("recent health metrics"),
+                        dbc.CardBody([
+                            html.Div(id="health-metrics-table")
+                        ])
                     ])
-                ])
-            ], width=6),
-            dbc.Col([
-                dbc.Card([
-                    dbc.CardHeader("Recent Health Metrics"),
-                    dbc.CardBody([
-                        html.Div(id="health-metrics-table")
-                    ])
-                ])
-            ], width=6)
-        ])
-    ], fluid=True)
+                ], width=6)
+            ])
+        ], style={
+            'maxWidth': '1400px',
+            'margin': '0 auto',
+            'padding': '2rem'
+        })
+    ], style={'backgroundColor': '#ffffff', 'minHeight': '100vh'})
