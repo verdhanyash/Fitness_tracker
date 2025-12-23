@@ -215,7 +215,6 @@ python-dotenv>=1.0.0
 ---
 
 <div align="center">
-
-Made with ❤️ for CSR210
-
+Made By Yash Verdhan Parihar
 </div>
+
