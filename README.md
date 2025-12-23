@@ -212,12 +212,8 @@ python-dotenv>=1.0.0
 - ✅ Unit 3: Integrating databases with SQLAlchemy
 - ✅ Unit 5: Building analytics dashboards using Plotly and Dash
 
-
 ---
 
 <div align="center">
-
 Made By Yash Verdhan Parihar
-
 </div>
-
